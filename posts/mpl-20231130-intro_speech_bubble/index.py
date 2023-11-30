@@ -28,7 +28,7 @@
 #
 # > pip install mpl-speech-bubble
 #
-# And the source code can be found at https://github.com/leejjoon/mpl-speech-bubble and documentation at https://mpl-speech-bubble.readthedocs.io/ (documentation is far from complete)
+# And the source code can be found at [https://github.com/leejjoon/mpl-speech-bubble](https://github.com/leejjoon/mpl-speech-bubble) and documentation at [https://mpl-speech-bubble.readthedocs.io/](https://mpl-speech-bubble.readthedocs.io/) (documentation is far from complete)
 #
 # With `mpl-speech-bubble`, you can annotate you Matplotlib plot with speech bubbles, like this
 #
