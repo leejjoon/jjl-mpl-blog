@@ -2,18 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://leejjoon.github.io/jjl-mpl-blog/about.html</loc>
-    <lastmod>2023-11-30T16:54:56.312Z</lastmod>
+    <lastmod>2023-12-27T02:48:10.353Z</lastmod>
   </url>
   <url>
-    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20231130-intro_speech_bubble/index.html</loc>
-    <lastmod>2023-11-30T16:54:55.844Z</lastmod>
-  </url>
-  <url>
-    <loc>https://leejjoon.github.io/jjl-mpl-blog/index.html</loc>
-    <lastmod>2023-11-30T16:54:55.448Z</lastmod>
+    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20231227-christmas_with_pattern_monster/index.html</loc>
+    <lastmod>2023-12-27T02:48:09.865Z</lastmod>
   </url>
   <url>
     <loc>https://leejjoon.github.io/jjl-mpl-blog/README_admin.html</loc>
-    <lastmod>2023-11-30T16:54:55.612Z</lastmod>
+    <lastmod>2023-12-27T02:48:09.405Z</lastmod>
+  </url>
+  <url>
+    <loc>https://leejjoon.github.io/jjl-mpl-blog/index.html</loc>
+    <lastmod>2023-12-27T02:48:09.221Z</lastmod>
+  </url>
+  <url>
+    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20231130-intro_speech_bubble/index.html</loc>
+    <lastmod>2023-12-27T02:48:09.637Z</lastmod>
   </url>
 </urlset>
