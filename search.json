@@ -25,7 +25,7 @@
     "href": "index.html",
     "title": "JJL’s Matplotlib blog",
     "section": "",
-    "text": "Assembling Multiple Legends into a single box\n\n\n\n\n\n\n\n\n\n\n\n\nFeb 24, 2024\n\n\nJae-Joon Lee\n\n\n\n\n\n\n  \n\n\n\n\nChristmas Patterns in Matplotlib\n\n\n\n\n\n\n\n\n\n\n\n\nDec 27, 2023\n\n\nJae-Joon Lee\n\n\n\n\n\n\n  \n\n\n\n\nIntroducing mpl-speech-bubble\n\n\n\n\n\n\n\n\n\n\n\n\nNov 30, 2023\n\n\nJae-Joon Lee\n\n\n\n\n\n\nNo matching items"
+    "text": "The source code for these posts (mostly jupyter notebook files converted to plain python using jupytext) should be available at the github repo below.\nhttps://github.com/leejjoon/jjl-mpl-blog\nIf you have any comments on the content of this site, please use github issues, etc.\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nAssembling Multiple Legends into a single box\n\n\n\n\n\n\n\n\n\n\n\n\nFeb 24, 2024\n\n\nJae-Joon Lee\n\n\n\n\n\n\n  \n\n\n\n\nChristmas Patterns in Matplotlib\n\n\n\n\n\n\n\n\n\n\n\n\nDec 27, 2023\n\n\nJae-Joon Lee\n\n\n\n\n\n\n  \n\n\n\n\nIntroducing mpl-speech-bubble\n\n\n\n\n\n\n\n\n\n\n\n\nNov 30, 2023\n\n\nJae-Joon Lee\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/mpl-20231227-christmas_with_pattern_monster/index.html",
