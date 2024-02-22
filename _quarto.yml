@@ -7,9 +7,7 @@ website:
     right:
       - about.qmd
       - icon: github
-        href: https://github.com/
-      - icon: twitter
-        href: https://twitter.com
+        href: https://github.com/leejjoon/jjl-mpl-blog
 format:
   html:
     theme: cosmo
