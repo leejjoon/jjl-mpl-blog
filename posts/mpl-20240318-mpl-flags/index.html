@@ -9,7 +9,7 @@
 <meta name="author" content="Jae-Joon Lee">
 <meta name="dcterms.date" content="2024-03-18">
 
-<title>JJL’s Matplotlib blog - Introducing mpl-flags</title>
+<title>JJL’s Matplotlib blog - mpl-flags : drawing flags with Matplotlib</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -137,7 +137,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Introducing mpl-flags</h1>
+      <h1 class="title">mpl-flags : drawing flags with Matplotlib</h1>
                       </div>
   </div>
     
@@ -161,7 +161,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">March 18, 2024</p>
+        <p class="date-modified">March 19, 2024</p>
       </div>
     </div>
       
@@ -178,8 +178,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<p>We would like to reproduce the plot from https://posts.voronoiapp.com/economy/GDP-Growth-Across-the-G20-Western-Economies-Lag–663, only the barchart part.</p>
-<div class="cell" data-execution_count="1">
+<section id="mpl-flags-drawing-flags-with-matplotlib" class="level1">
+<h1>mpl-flags : drawing flags with Matplotlib</h1>
+<p>This post is to introduce <a href="https://github.com/leejjoon/mpl-flags"><code>mpl-flags</code></a> package. To demonstrate the package, we would like to reproduce the plot from <a href="https://posts.voronoiapp.com/economy/GDP-Growth-Across-the-G20-Western-Economies-Lag--663">this post</a>, only the barchart part.</p>
+<p>We will start the demo by loading the data as pandas DataFrame.</p>
+<div class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> io</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -207,10 +210,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(io.StringIO(csvs))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="here-is-the-full-example" class="level2">
-<h2 class="anchored" data-anchor-id="here-is-the-full-example">Here is the full example</h2>
-<p>Later, we will provide more elaborated one.</p>
-<div class="cell" data-execution_count="2">
+<section id="full-example" class="level2">
+<h2 class="anchored" data-anchor-id="full-example">Full example</h2>
+<p>We will first show the full example source, then we will introduce <code>mpl-flags</code> and explain how it works.</p>
+<div class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.offsetbox <span class="im">import</span> (TextArea, DrawingArea, AnnotationBbox, VPacker)</span>
@@ -286,8 +289,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="index_files/figure-html/cell-3-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<p>We will start the example by introducing <code>mpl-flags</code> package. <code>mpl-flags</code> contains the flag data in vector format readily usable with Matplotlib. The original flags data are in svg format, and are converted to matplotlib’s <code>Path</code> data using <code>mpl-simple-svg-parser</code>. <code>mpl-flags</code> does not contain the original svg files, only the converted data in numpy format (vertices and codes).</p>
-<div class="cell" data-execution_count="3">
+</section>
+</section>
+<section id="mpl-flags" class="level1">
+<h1>mpl-flags</h1>
+<p><code>mpl-flags</code> is a small packages to draw flags in your matplotlib plots It contains the flag data in vector format readily usable with Matplotlib. The original flags data are from svg format, converted to matplotlib’s <code>Path</code> data using <a href="https://github.com/leejjoon/mpl-simple-svg-parser"><code>mpl-simple-svg-parser</code></a>. <code>mpl-flags</code> does not contain the original svg files, only the converted data in numpy format (vertices and codes).</p>
+<div class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mpl_flags <span class="im">import</span> Flags</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>flags <span class="op">=</span> Flags(<span class="st">"noto_waved"</span>) <span class="co"># You initialize the Flags class specifying what kind of flags you like to use.</span></span>
@@ -303,12 +310,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>show_flag</code> method draws the flag in data coordinate.</p>
 <p>The flag data is collected from various sources. Currently, it includes flags from</p>
 <ol type="1">
-<li>Google’s noto color emoji font : https://github.com/googlefonts/noto-emoji</li>
-<li>circle-flags : https://github.com/HatScripts/circle-flags</li>
-<li>flag-icons : https://github.com/lipis/flag-icons</li>
+<li>Google’s noto color emoji font : <a href="https://github.com/googlefonts/noto-emoji">https://github.com/googlefonts/noto-emoji</a></li>
+<li>circle-flags : <a href="https://github.com/HatScripts/circle-flags">https://github.com/HatScripts/circle-flags</a></li>
+<li>flag-icons : <a href="https://github.com/lipis/flag-icons">https://github.com/lipis/flag-icons</a></li>
 </ol>
 <p>Different sources can render the flags differently. You may compare flags of different sources.</p>
-<div class="cell" data-execution_count="4">
+<div class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">4</span>), constrained_layout<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>sspec <span class="op">=</span> fig.add_gridspec(<span class="dv">1</span>, <span class="dv">1</span>)[<span class="dv">0</span>, <span class="dv">0</span>]</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>country_code <span class="op">=</span> <span class="st">"KR"</span></span>
@@ -318,8 +325,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>So, there are 6 flag kinds from 3 sources.</p>
-<p>The country code is based on 2 letter code https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 Note also that some flags are missing from some sources.</p>
-<div class="cell" data-execution_count="5">
+<p>The country code is based on <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">2 letter code</a>.</p>
+<div class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Flags.print_flags_summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[All Codes]
@@ -336,16 +343,16 @@ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG UK UM UN US UY UZ VA
 VC VE VG VI VN VU WF WS XK XX YE YT YU ZA ZM ZW
 
 [Missing Codes]
-noto_original:  SU XX FX UK YU PC AN CQ
-noto_waved:  SU XX FX UK YU PC AN CQ
-1x1:  SU TA FX UK EA YU AC AN CQ
-4x3:  SU TA FX UK EA YU AC AN CQ
+noto_original:  FX YU UK SU XX CQ AN PC
+noto_waved:  FX YU UK SU XX CQ AN PC
+1x1:  FX AC YU UK SU CQ EA TA AN
+4x3:  FX AC YU UK SU CQ EA TA AN
 circle:  PC
 simple:  PC</code></pre>
 </div>
 </div>
 <p>Above example of Korean flag is relatively simple and are modstly identical among kinds. However, for a bit complicated flags, different kinds show different flags. “circle” and “simple” show simplified flags without much details, best for small size, while other kinds reproduce the original flags.</p>
-<div class="cell" data-execution_count="6">
+<div class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">4</span>), constrained_layout<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>sspec <span class="op">=</span> fig.add_gridspec(<span class="dv">2</span>, <span class="dv">1</span>)[<span class="dv">0</span>, <span class="dv">0</span>]</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>country_code <span class="op">=</span> <span class="st">"US"</span></span>
@@ -358,11 +365,11 @@ simple:  PC</code></pre>
 <p><img src="index_files/figure-html/cell-7-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<p><code>mpl-flags</code> package itself does not provide a mechanism to search for the country from common country name. For that, you may use packages like https://github.com/pycountry/pycountry</p>
+<p><code>mpl-flags</code> package itself does not provide a mechanism to search for the country from common country name. For that, you may use packages like <a href="https://github.com/pycountry/pycountry">pycountry</a>.</p>
 <p>In the above example, we used <code>show_flag</code> method to draw the flag in data coordinate. Often, this is not you want. You want it to behave like texts.</p>
 <p>Thus you are recommended to use <code>get_drawing_area</code> method. This returns <code>matplotlib.offsetbox</code>’s <code>DrawingArea</code> instance.</p>
-<p>If you are not familar with these, you may take a look at https://matplotlib.org/stable/gallery/text_labels_and_annotations/demo_annotation_box.html</p>
-<div class="cell" data-execution_count="7">
+<p>If you are not familar with these, you may take a look at <a href="https://matplotlib.org/stable/gallery/text_labels_and_annotations/demo_annotation_box.html">this guide</a></p>
+<div class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.offsetbox <span class="im">import</span> AnnotationBbox</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>flags <span class="op">=</span> Flags(<span class="st">"noto_original"</span>)</span>
@@ -372,15 +379,15 @@ simple:  PC</code></pre>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>ab <span class="op">=</span> AnnotationBbox(da, (<span class="fl">0.5</span>, <span class="fl">0.5</span>), frameon<span class="op">=</span><span class="va">True</span>,</span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                    box_alignment<span class="op">=</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>))</span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>ax.add_artist(ab)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
-<pre><code>&lt;matplotlib.offsetbox.AnnotationBbox at 0x7ff8e45f2a10&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<pre><code>&lt;matplotlib.offsetbox.AnnotationBbox at 0x7f5dad4d5930&gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <p><img src="index_files/figure-html/cell-8-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <p>Now, let’s get back to our original example. We will start with a bar chart withour flags. Note that we are adding texts using <code>AnnotationBbox</code> and providing the bar itself as a coordinate, which means we will use a coordinate that is normalized to the extent of the bar.</p>
-<div class="cell" data-execution_count="8">
+<div class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up the matplotlib figure</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -439,7 +446,7 @@ simple:  PC</code></pre>
 </div>
 </div>
 <p>We are now going to add flags. If you know how annoatation_box works, adding flags is very straight forward. In the example below, we will create two <code>DrawingArea</code> per bar. The first one is to draw a white background circle for the flags. And another <code>DrawingArea</code> for flags of <code>circle</code> kind.</p>
-<div class="cell" data-execution_count="9">
+<div class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.patches <span class="im">import</span> Circle</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mpl_flags <span class="im">import</span> Flags</span>
@@ -462,8 +469,8 @@ simple:  PC</code></pre>
 <span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    ab <span class="op">=</span> AnnotationBbox(da, (<span class="dv">0</span>, <span class="fl">0.5</span>), xycoords<span class="op">=</span>bar, <span class="op">**</span>kw)</span>
 <span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>    ax.add_artist(ab)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="10">
-<div class="cell-output cell-output-display" data-execution_count="10">
+<div class="cell" data-execution_count="15">
+<div class="cell-output cell-output-display" data-execution_count="15">
 <p><img src="index_files/figure-html/cell-11-output-1.png" class="img-fluid"></p>
 </div>
 </div>
@@ -471,7 +478,7 @@ simple:  PC</code></pre>
 <section id="no-gradient-support" class="level1">
 <h1>no gradient support</h1>
 <p>Some flags (the original svg files) use gradient, which is not currently supported by <code>mpl-flags</code>. Below, we compare original svg file (left) and <code>mpl-flags</code> flag rendering. You will notice what <code>mpl-flags</code> result misses some colors.</p>
-<div class="cell" data-execution_count="29">
+<div class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># list of flags with gradient</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>with_gradients <span class="op">=</span> {</span>
@@ -479,7 +486,7 @@ simple:  PC</code></pre>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"4x3"</span>: [<span class="st">'BZ'</span>, <span class="st">'FK'</span>, <span class="st">'GS'</span>, <span class="st">'GT'</span>, <span class="st">'MX'</span>, <span class="st">'NI'</span>, <span class="st">'VG'</span>]</span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="33">
+<div class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>flags <span class="op">=</span> Flags(<span class="st">"noto_original"</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>codes <span class="op">=</span> with_gradients[<span class="st">"noto_original"</span>]</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>get_filename <span class="op">=</span> <span class="kw">lambda</span> code: <span class="ss">f"../../../../mpl-flags/third_party/noto-emoji/third_party/region-flags/svg/</span><span class="sc">{</span>code<span class="sc">}</span><span class="ss">.svg"</span></span>
@@ -490,7 +497,7 @@ simple:  PC</code></pre>
 <p><img src="index_files/figure-html/cell-14-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<div class="cell" data-execution_count="34">
+<div class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>flags <span class="op">=</span> Flags(<span class="st">"4x3"</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>codes <span class="op">=</span> with_gradients[<span class="st">"4x3"</span>]</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>get_filename <span class="op">=</span> <span class="kw">lambda</span> code: <span class="ss">f"../../../../mpl-flags/third_party/flag-icons/flags/4x3/</span><span class="sc">{</span>code<span class="sc">.</span>lower()<span class="sc">}</span><span class="ss">.svg"</span></span>
