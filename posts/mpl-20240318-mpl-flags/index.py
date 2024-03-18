@@ -1,15 +1,20 @@
 # ---
-# title: "Introducing mpl-flags"
+# title: "mpl-flags : drawing flags with Matplotlib"
 # author: "Jae-Joon Lee"
 # date: "03/18/2024"
 # # draft: false
-# date-modified: "03/18/2024"
+# date-modified: "03/19/2024"
 # # image: https://mpl-speech-bubble.readthedocs.io/en/latest/_images/demo_annotati_bubble.png
 #
 # ---
 
 # %% [markdown]
-# We would like to reproduce the plot from https://posts.voronoiapp.com/economy/GDP-Growth-Across-the-G20-Western-Economies-Lag--663, only the barchart part.
+# # mpl-flags : drawing flags with Matplotlib
+#
+# This post is to introduce   [`mpl-flags`](https://github.com/leejjoon/mpl-flags) package.
+# To demonstrate the package, we would like to reproduce the plot from [this post](https://posts.voronoiapp.com/economy/GDP-Growth-Across-the-G20-Western-Economies-Lag--663), only the barchart part.
+#
+# We will start the demo by loading the data as pandas DataFrame.
 
 # %%
 import pandas as pd
@@ -41,8 +46,9 @@ df = pd.read_csv(io.StringIO(csvs))
 
 
 # %% [markdown]
-# ## Here is the full example
-# Later, we will provide more elaborated one.
+# ## Full example
+#
+# We will first show the full example source, then we will introduce `mpl-flags` and explain how it works.
 
 # %%
 import matplotlib.pyplot as plt
@@ -118,11 +124,12 @@ ax.set_axis_off()
 plt.show()
 
 # %% [markdown]
-# We will start the example by introducing `mpl-flags` package.
-# `mpl-flags` contains the flag data in vector format readily usable with
-# Matplotlib. The original flags data are in svg format, and are converted to
-# matplotlib's `Path` data using `mpl-simple-svg-parser`. `mpl-flags` does not
-# contain the original svg files, only the converted data in numpy format
+# # mpl-flags
+#
+# `mpl-flags` is a small packages to draw flags in your matplotlib plots
+# It contains the flag data in vector format readily usable with
+# Matplotlib. The original flags data are from svg format, converted to
+# matplotlib's `Path` data using [`mpl-simple-svg-parser`](https://github.com/leejjoon/mpl-simple-svg-parser). `mpl-flags` does not contain the original svg files, only the converted data in numpy format
 # (vertices and codes).
 #
 
@@ -143,9 +150,9 @@ flags.show_flag(ax, "KR")
 # %% [markdown]
 # The flag data is collected from various sources. Currently, it includes flags from 
 #
-# 1. Google's noto color emoji font : https://github.com/googlefonts/noto-emoji
-# 2. circle-flags : https://github.com/HatScripts/circle-flags
-# 3. flag-icons : https://github.com/lipis/flag-icons
+# 1. Google's noto color emoji font : [https://github.com/googlefonts/noto-emoji](https://github.com/googlefonts/noto-emoji)
+# 2. circle-flags : [https://github.com/HatScripts/circle-flags](https://github.com/HatScripts/circle-flags)
+# 3. flag-icons : [https://github.com/lipis/flag-icons](https://github.com/lipis/flag-icons)
 #
 # Different sources can render the flags differently. You may compare flags of different sources.
 
@@ -159,8 +166,7 @@ Flags.show_flag_kinds(sspec, country_code)
 # %% [markdown]
 # So, there are 6 flag kinds from 3 sources.
 #
-# The country code is based on 2 letter code https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 
-# Note also that some flags are missing from some sources.
+# The country code is based on [2 letter code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
 #
 
 # %%
@@ -182,15 +188,14 @@ Flags.show_flag_kinds(sspec, country_code)
 
 
 # %% [markdown]
-# `mpl-flags` package itself does not provide a mechanism to search for the country from common country name. For that, you may use packages like https://github.com/pycountry/pycountry
+# `mpl-flags` package itself does not provide a mechanism to search for the country from common country name. For that, you may use packages like [pycountry](https://github.com/pycountry/pycountry).
 
 # %% [markdown]
 # In the above example, we used `show_flag` method to draw the flag in data coordinate. Often, this is not you want. You want it to behave like texts.
 #
 # Thus you are recommended to use `get_drawing_area` method. This returns `matplotlib.offsetbox`'s `DrawingArea` instance.
 #
-# If you are not familar with these, you may take a look at 
-# https://matplotlib.org/stable/gallery/text_labels_and_annotations/demo_annotation_box.html
+# If you are not familar with these, you may take a look at [this guide](https://matplotlib.org/stable/gallery/text_labels_and_annotations/demo_annotation_box.html)
 #
 #
 
@@ -296,5 +301,73 @@ for country, code, bar in zip(countries, country_codes, ax.patches):
 #| echo: false
 #| warning: false
 fig
+
+# %% [markdown]
+# # no gradient support
+#
+# Some flags (the original svg files) use gradient, which is not currently supported by `mpl-flags`.
+# Below, we compare original svg file (left) and `mpl-flags` flag rendering. You will notice what `mpl-flags` result
+# misses some colors.
+#
+
+# %%
+#| echo: false
+
+import subprocess
+import io
+
+def get_png(svgfile):
+    proc = subprocess.Popen(["inkscape", svgfile,
+                             "--pipe", "--export-filename=-", "--export-type=png", ],
+                            stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    out = proc.communicate()[0]
+    arr = plt.imread(io.BytesIO(out), format="png")
+
+    return arr
+
+def compare_svg(fig, flags, codes, get_filename):
+    gs = fig.add_gridspec(len(codes), 2, top=0.99, bottom=0.01)
+    axs = gs.subplots()
+
+    for i, code in enumerate(codes):
+
+        svgfile = get_filename(code)
+        arr = get_png(svgfile)
+        ax = axs[i, 0]
+        ax.imshow(arr)
+        ax.set_axis_off()
+
+        ax = axs[i, 1]
+        flags.show_flag(ax, code)
+        ax.set_axis_off()
+
+
+
+# %%
+# list of flags with gradient
+
+with_gradients = {
+    "noto_original": ['BZ', 'EC', 'FK', 'GS', 'GT', 'MX', 'NI', 'PM', 'TA', 'VG'],
+    "4x3": ['BZ', 'FK', 'GS', 'GT', 'MX', 'NI', 'VG']
+}
+
+
+# %%
+flags = Flags("noto_original")
+codes = with_gradients["noto_original"]
+get_filename = lambda code: f"../../../../mpl-flags/third_party/noto-emoji/third_party/region-flags/svg/{code}.svg"
+
+fig = plt.figure(num=1, figsize=(4, 8))
+compare_svg(fig, flags, codes, get_filename)
+
+
+# %%
+flags = Flags("4x3")
+codes = with_gradients["4x3"]
+get_filename = lambda code: f"../../../../mpl-flags/third_party/flag-icons/flags/4x3/{code.lower()}.svg"
+
+fig = plt.figure(num=1, figsize=(4, 6.5))
+compare_svg(fig, flags, codes, get_filename)
+
 
 # %%
