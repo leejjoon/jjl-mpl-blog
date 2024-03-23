@@ -5,7 +5,10 @@
 # draft: false
 # date-modified: "12/27/2023"
 # image: https://mpl-pe-pattern-monster.readthedocs.io/en/latest/_images/sphx_glr_barplot_christmas_001.png
-#
+# categories:
+#   - tutorial
+#   - mpl-visual-context
+#   - patterns
 # ---
 
 # %% [markdown]

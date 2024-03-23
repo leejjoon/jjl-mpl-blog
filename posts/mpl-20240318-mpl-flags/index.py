@@ -5,6 +5,9 @@
 # # draft: false
 # date-modified: "03/19/2024"
 # # image: https://mpl-speech-bubble.readthedocs.io/en/latest/_images/demo_annotati_bubble.png
+# categories:
+#   - tutorial
+#   - mpl-flags
 #
 # ---
 
@@ -14,9 +17,18 @@
 # This post is to introduce   [`mpl-flags`](https://github.com/leejjoon/mpl-flags) package.
 # To demonstrate the package, we would like to reproduce the plot from [this post](https://posts.voronoiapp.com/economy/GDP-Growth-Across-the-G20-Western-Economies-Lag--663), only the barchart part.
 #
-# We will start the demo by loading the data as pandas DataFrame.
+# Here is what the output will look like.
 
 # %%
+#| warning: false
+#| code-fold: true
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+from matplotlib.offsetbox import (TextArea, DrawingArea, AnnotationBbox, VPacker)
+from matplotlib.patches import Circle
+from mpl_flags import Flags
+
 import pandas as pd
 import io
 
@@ -43,20 +55,6 @@ Germany,0.5,DE
 """
 
 df = pd.read_csv(io.StringIO(csvs))
-
-
-# %% [markdown]
-# ## Full example
-#
-# We will first show the full example source, then we will introduce `mpl-flags` and explain how it works.
-
-# %%
-import matplotlib.pyplot as plt
-import seaborn as sns
-from matplotlib.offsetbox import (TextArea, DrawingArea, AnnotationBbox, VPacker)
-from matplotlib.patches import Circle
-from mpl_flags import Flags
-
 fig, ax = plt.subplots(1, 1, num=1, figsize=(7, 10), clear=True,
                        facecolor="gold")
 countries = df["Country"]
@@ -212,7 +210,40 @@ ax.add_artist(ab)
 
 
 # %% [markdown]
-# Now, let's get back to our original example. We will start with a bar chart withour flags. Note that we are adding texts using `AnnotationBbox` and providing the bar itself as a coordinate, which means we will use a coordinate that is normalized to the extent of the bar.
+# Now, let's see how we can creat the barplots with flags. We will start the demo by loading the data as pandas DataFrame.
+#
+
+# %%
+import pandas as pd
+import io
+
+csvs = """Country,2024 Real GDP % Change,Code
+India,6.5,IN
+Indonesia,5,ID
+China,4.6,CN
+Türkiye,3,TR
+Argentina,2.8,AR
+Mexico,2.7,MX
+Saudi Arabia,2.7,SA
+Russia,2.6,RU
+Korea,2.2,KR
+U.S.,2.1,US
+Brazil,1.7,BR
+Canada,1.4,CA
+Australia,1.2,AU
+France,1,FR
+South Africa,1,ZA
+Japan,0.9,JP
+Italy,0.7,IT
+United Kingdom,0.6,GB
+Germany,0.5,DE
+"""
+
+df = pd.read_csv(io.StringIO(csvs))
+
+
+# %% [markdown]
+# Then, we will create a bar chart plot, without flags. Note that we are adding texts using `AnnotationBbox` and providing the bar itself as a coordinate, which means we will use a coordinate that is normalized to the extent of the bar.
 
 # %%
 # Set up the matplotlib figure
