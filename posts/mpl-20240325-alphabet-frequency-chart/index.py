@@ -166,6 +166,11 @@ ax.set_ylabel("Frequency [%]")
 ax.set_xlim(-0.6, 3.6)
 ax.set_ylim(-1.5, 10)
 
+# %%
+#| echo: false
+#| warning: false
+fig
+
 # %% [markdown]
 #
 # `mpl-poormasn-3d` provide a way to convert your bars to 3d. We will first try

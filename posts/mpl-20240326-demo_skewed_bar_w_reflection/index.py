@@ -4,12 +4,16 @@
 # date: "03/25/2024"
 # draft: true
 # date-modified: "03/25/2024"
-#
+# categories:
+#   - tutorial
+#   - mpl-poormans-3d
+#   - mpl-visual-context
 # ---
 
+# %% [markdown]
 # In this post, we will make a bar chart. We will skew them and add some 3d effect. Then, we will add a reflection.
 
-# region
+# %%
 #| warning: false
 #| code-fold: true
 import matplotlib.pyplot as plt
@@ -120,14 +124,14 @@ a.set_zorder(0.7)
 ax.add_artist(a)
 
 plt.show()
-# endregion
 
+# %% [markdown]
 # ## Starting from a simple bar chart
 #
 # We start from mpl example [Grouped bar chart with labels](https://matplotlib.org/stable/gallery/lines_bars_and_markers/barchart.html). The only change
 # we made is to increase the offset slightly so that bars are separated.
 
-# region
+# %%
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -164,14 +168,14 @@ ax.set_xticks(x + label_offset, species)
 ax.legend(loc='upper left', ncols=3)
 _ = ax.set_ylim(0, 250) # To suppress the echo
 
-# endregion
 
+# %% [markdown]
 # ## Coloring bar labels
 #
 # Let's start with simple patheffect. We will change the color of bar labels.
 # by adding patheffects so that they have similar color to the bar themselves.
 
-# region
+# %%
 #| output: false
 import mpl_visual_context.patheffects as pe
 
@@ -186,12 +190,13 @@ for p, t in zip(ax.patches, ax.texts):
                                                          # bar.
                         pe.FillColor("w") # draw the text with white fill.
                         ])
-# endregion
 
+# %%
 #| echo: false
 #| warning: false
 fig
 
+# %% [markdown]
 # ## Skewed bar charts
 #
 # We would like to make bars between different species, more distinguished.
@@ -201,8 +206,10 @@ fig
 # in the screen coordinate.
 #
 
+# %%
 tr_skew = pe.PostAffine().skew_deg(0, 10)
 
+# %% [markdown]
 # We want the origin of the skew, for each species, set at the lower left
 # corner of the left most bar. This is doen by `Recenter` class. Note that in most case, you change the center, apply the transform, then recover the original origin. For example, the code below sets the origin at (i, 0) in data corrdinate, apply skew, then recover the original origin.
 #
@@ -211,7 +218,7 @@ tr_skew = pe.PostAffine().skew_deg(0, 10)
 # skew = tr_recenter | tr_skew | tr_recenter.restore()
 # ```
 
-# region
+# %%
 #| output: false
 #| code-line-numbers: false
 
@@ -237,12 +244,13 @@ for i in range(3):
 # we adjust the and ylim to make a room for skewed artists.
 ax.set_ylim(0, 290)    
 
-# endregion
 
+# %%
 #| echo: false
 #| warning: false
 fig
 
+# %% [markdown]
 # ## Reflection?
 #
 # Let's see if We can draw reflected image. We try this by flipping the coordinate vertically and make it transparent. We also like to offset the flipped bar downward by 5 points. The combined pathffect should look like below
@@ -254,7 +262,7 @@ fig
 # ```
 #
 
-# region
+# %%
 #| output: false
 tr_skew = pe.PostAffine().skew_deg(0, 10)
 
@@ -276,19 +284,20 @@ for i in range(3):
         
 # Again, we adjust the ylim to better show flipped box.
 ax.set_ylim(-20, 290)        
-# endregion
 
+# %%
 #| echo: false
 #| warning: false
 fig
 
+# %% [markdown]
 # ## 3D effects
 #
 # Let's set aside the reflection for now. Instead, we will add 3d effects to the bars. For the 3d effects, we wii
 # use `mpl_poormans_3d`. Please check `mpl_poormans_3d` for more details.
 #
 
-# region
+# %%
 #| output: false
 from matplotlib.colors import LightSource
 from mpl_poormans_3d import Poormans3d, Poormans3dFace
@@ -307,17 +316,18 @@ for i in range(3):
                             skew | p3d_face])
         
 
-# endregion
 
+# %%
 #| echo: false
 #| warning: false
 fig
 
+# %% [markdown]
 # The overwrap between adjacent bars can be avoided by adjusting their zorders.
 # We want the left most bar in the same group is drwan last.
 #
 
-# region
+# %%
 #| output: false
 for i in range(3):
     for z, p in enumerate(ax.patches[i::3]):
@@ -325,15 +335,16 @@ for i in range(3):
         
 ax.set_xlim(-0.4, 3.1)
 ax.set_ylim(-25, 290)        
-# endregion
 
+# %%
 #| echo: false
 #| warning: false
 fig
 
+# %% [markdown]
 # Now, let's make bar corners round
 
-# region
+# %%
 #| output: false
 rc = pe.RoundCorner(5)
 
@@ -344,12 +355,13 @@ for i in range(3):
     for p, t in zip(ax.patches[i::3], ax.texts[i::3]):
         p.set_path_effects([skew | rc | p3d,
                             skew | rc | p3d_face])
-# endregion
 
+# %%
 #| echo: false
 #| warning: false
 fig
 
+# %% [markdown]
 # ## Reflection with 3d effects : attempt 1
 #
 # We would like to add reflection effects to the bars in 3d. Unfortunately this
@@ -359,7 +371,7 @@ fig
 #
 # One way to overcome this is to use image-clipboard. The clipboard will let you save the result of the patheffect to an image and reuse it later, optionally applying imageffect. For our purpose, we will capture the 3d bars as an image and paste it later (as an image) with transparency.
 
-# region
+# %%
 #| output: false
 from mpl_visual_context.patheffects_image_effect import ImageClipboard
 import mpl_visual_context.image_effect as ie
@@ -379,18 +391,19 @@ for i in range(3):
                             # paste will draw the clipboard image on the
                             # screen, optionally apllying image-effects.
                             ])
-# endregion
 
+# %%
 #| echo: false
 #| warning: false
 fig
 
+# %% [markdown]
 # ## Reflection with 3d effects : attempt 2
 #
 # The above approch works to some degree, but can be improved.
 # In the above approach, the clipboard is copied and pasted for each bar. We will collcet all the bars in a single clipboard and have it pasted.
 
-# region
+# %%
 #| output: false
 from mpl_visual_context.patheffects_image_effect import ClipboardPasteArtist
 
@@ -411,12 +424,13 @@ a.set_zorder(1.5)  # we need to make sure that this is drawn after the bars
                    # (i.e., they should have copied to the clipboard before
                    # getting pasted.)
 ax.add_artist(a)        
-# endregion
 
+# %%
 #| echo: false
 #| warning: false
 fig
 
+# %% [markdown]
 # ## Reflection with 3d effects : attempt 3
 #
 # We will repeat above attempt, but with the flipped bars. This is more complicated.
@@ -432,15 +446,18 @@ fig
 #
 #
 
+# %% [markdown]
 # First, we will remove clipboard_paste_artists that is added previously. 
 #
 
+# %%
 #| output: false
 for a in ax.artists: a.remove()
 
+# %% [markdown]
 #
 
-# region
+# %%
 #| output: false
 from mpl_visual_context.artist_helper import ArtistListWithPE
 
@@ -470,25 +487,28 @@ for i in range(3):
 a = ClipboardPasteArtist(ic_flipped, ie.AlphaAxb((0.3, 0)))
 a.set_zorder(0.7)
 ax.add_artist(a)        
-# endregion
 
+# %%
 #| echo: false
 #| warning: false
 fig
 
+# %% [markdown]
 # ## Reflection with 3d effects : final attemp
 #
 # We are almost done. We want the reflection fades away for distant object.
 #
 # Again, we will remove any extra artists we create in previous steps.
 
+# %%
 #| output: false
 for a in ax.artists: a.remove()
 
+# %% [markdown]
 # We will use `RefelctionArtist`. `ReflectionArtist` is similar to `ClipboardPasteArtist`, but is specialized to
 # draw refelection images which fades away from the original image. The initialization of `RefelctionArtist` requires  two clipboard, one for reflected, the other for the original.
 
-# region
+# %%
 #| output: false
 from mpl_visual_context.patheffects_image_effect import ReflectionArtist
 
@@ -531,12 +551,13 @@ a = ReflectionArtist(ic_flipped, clipboard_alpha=ic,
                      )
 a.set_zorder(0.7)
 ax.add_artist(a)        
-# endregion
 
+# %%
 #| echo: false
 #| warning: false
 fig
 
+# %% [markdown]
 # For the final code, take a look at the folded code at the top, or the linked page.
 #
 # [Example at mpl-poormans-3d page](https://mpl-poormans-3d.readthedocs.io/en/latest/examples/demo_skewed_bar.html#sphx-glr-examples-demo-skewed-bar-py)

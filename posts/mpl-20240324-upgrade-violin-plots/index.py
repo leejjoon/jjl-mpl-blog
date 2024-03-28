@@ -10,7 +10,7 @@
 # ---
 
 # %% [markdown]
-# In this post, I will introduce [`mpl-visual-context`](https://mpl-visual-context.readthedocs.io/en/latest/index.html) and how you can upgrade your violinplot and make it more fancy.
+# In this post, I will show how you can upgrade your violinplot with [`mpl-visual-context`](https://mpl-visual-context.readthedocs.io/en/latest/index.html) and make it fancy.
 #
 #
 # ```shell
