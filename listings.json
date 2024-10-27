@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/mpl-20241027-mpl-simple-svg-parser-user-guide/index.html",
       "/posts/mpl-20240408-fancy-bar-plot/index.html",
       "/posts/mpl-20240325-alphabet-frequency-chart/index.html",
       "/posts/mpl-20240324-upgrade-violin-plots/index.html",

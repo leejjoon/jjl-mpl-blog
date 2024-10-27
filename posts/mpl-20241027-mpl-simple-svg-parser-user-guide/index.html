@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jae-Joon Lee">
+<meta name="dcterms.date" content="2024-10-27">
+
+<title>JJL’s Matplotlib blog - Rendering SVG with Matplotlib</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">JJL’s Matplotlib blog</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/leejjoon/jjl-mpl-blog" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Rendering SVG with Matplotlib</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Jae-Joon Lee </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 27, 2024</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">October 27, 2024</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="a-guide-to-render-svg-in-your-matplotlib-plot-as-vector-format." class="level1">
+<h1>A guide to render SVG in your Matplotlib plot as vector format.</h1>
+<p>This tutorial demonstrates how one can include svg in Matplotlib, as vector format (i.e.g, Matplotlib’s paths). While you can rasterize the svg into an image and include them, we will read the svg file and produce matplotlib path objects.</p>
+<p>We will use (mpl-simple-svg-parser)[https://mpl-simple-svg-parser.readthedocs.io/en/latest/index.html] package. Note that this package is not fully-featured SVG parser. Instead, it uses (cariosvg)[https://cairosvg.org/] and (picosvg)[https://github.com/googlefonts/picosvg] to convert the input svg into a more manageable svg and then read them with the help of (svgpath2mpl)[https://github.com/nvictus/svgpath2mpl]. The package does support gradient in a very ad hoc way. It uses (Skia)[https://skia.org/] to produce gradient image and include them in the matplotlib plot.</p>
+<p>While this is not ideal (and not very efficient), this let you render a good fraction of svg wit matlotlib. On the other hand, features like filters are not supported.</p>
+<p>Here is an example of annotating your plot with svg.</p>
+<div class="cell" data-execution_count="34">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.offsetbox <span class="im">import</span> AnnotationBbox</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mpl_simple_svg_parser <span class="im">import</span> SVGMplPathIterator</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># TIOBE score from https://spectrum.ieee.org/the-top-programming-languages-2023</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>l <span class="op">=</span> [</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"Python"</span>, <span class="dv">1</span>),</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"Java"</span>, <span class="fl">0.588</span>),</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"C++"</span>, <span class="fl">0.538</span>),</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"C"</span>, <span class="fl">0.4641</span>),</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"JavaScript"</span>, <span class="fl">0.4638</span>),</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"C#"</span>, <span class="fl">0.3973</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(l, columns<span class="op">=</span>[<span class="st">"Language"</span>, <span class="st">"Score"</span>])</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>sns.set_color_codes(<span class="st">"muted"</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>sns.<span class="bu">set</span>(font_scale <span class="op">=</span> <span class="fl">1.5</span>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(num<span class="op">=</span><span class="dv">1</span>, clear<span class="op">=</span><span class="va">True</span>, layout<span class="op">=</span><span class="st">"constrained"</span>)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>sns.barplot(x<span class="op">=</span><span class="st">"Score"</span>, y<span class="op">=</span><span class="st">"Language"</span>, data<span class="op">=</span>df,</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="st">"Tiobe Score 2023"</span>, color<span class="op">=</span><span class="st">"b"</span>,</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>            legend<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>ax.yaxis.label.set_visible(<span class="va">False</span>)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"TIOBE Score 2023"</span>)</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>ax.set_xlim(<span class="dv">0</span>, <span class="fl">1.13</span>)</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>ylabels <span class="op">=</span> [l.get_text() <span class="cf">for</span> l <span class="kw">in</span> ax.get_yticklabels()] <span class="co"># save it to use with svg icons later</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>bars <span class="op">=</span> ax.containers[<span class="dv">0</span>] <span class="co"># list of rectangles for the bars.</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> bar, l <span class="kw">in</span> <span class="bu">zip</span>(bars, ylabels):</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    ax.annotate(l, xy<span class="op">=</span>(<span class="dv">0</span>, <span class="fl">0.5</span>), xycoords<span class="op">=</span>bar, va<span class="op">=</span><span class="st">"center"</span>, ha<span class="op">=</span><span class="st">"left"</span>,</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>               xytext<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">0</span>), textcoords<span class="op">=</span><span class="st">"offset points"</span>, color<span class="op">=</span><span class="st">"w"</span>)</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>ax.tick_params(axis<span class="op">=</span><span class="st">"y"</span>,labelleft<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="co"># ax.tick_params(axis="x",direction="in")</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>ax.set_xlim(<span class="dv">0</span>, <span class="fl">1.2</span>) <span class="co"># to make a room for svg annotattion.</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> toml</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>icons <span class="op">=</span> toml.load(<span class="bu">open</span>(<span class="st">"svg_icons.toml"</span>))</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_da(b, ax, wmax<span class="op">=</span><span class="dv">64</span>, hmax<span class="op">=</span><span class="dv">64</span>):</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>    svg_mpl_path_iterator <span class="op">=</span> SVGMplPathIterator(b)</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>    da <span class="op">=</span> svg_mpl_path_iterator.get_drawing_area(ax, wmax<span class="op">=</span>wmax, hmax<span class="op">=</span>hmax)</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> da</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> l, bar <span class="kw">in</span> <span class="bu">zip</span>(ylabels, bars):</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>    da <span class="op">=</span> get_da(icons[l].encode(<span class="st">"ascii"</span>), ax, wmax<span class="op">=</span><span class="dv">32</span>, hmax<span class="op">=</span><span class="dv">32</span>)</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>    ab <span class="op">=</span> AnnotationBbox(da, (<span class="fl">1.</span>, <span class="fl">0.5</span>), xycoords<span class="op">=</span>bar, frameon<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>                        xybox<span class="op">=</span>(<span class="dv">5</span>, <span class="dv">0</span>), boxcoords<span class="op">=</span><span class="st">"offset points"</span>,</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>                        box_alignment<span class="op">=</span>(<span class="fl">0.0</span>, <span class="fl">0.5</span>))</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>    ax.add_artist(ab)</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="index_files/figure-html/cell-2-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="using-svgmplpathiterator-from-mpl_simple_svg_parser" class="level1">
+<h1>Using <code>SVGMplPathIterator</code> from mpl_simple_svg_parser</h1>
+<p>Let’s start with a simple example. The base class is <code>SVGMplPathIterator</code>. It reads the svg string, and produces a list of matplotlib’s path object. If you want to render the svg in the axes’ data coordinate, you may simply use the <code>draw</code> method.</p>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mpl_simple_svg_parser <span class="im">import</span> SVGMplPathIterator</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(num<span class="op">=</span><span class="dv">1</span>, clear<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>ax.set_aspect(<span class="dv">1</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>fn <span class="op">=</span> <span class="st">"homer-simpson.svg"</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>svg_mpl_path_iterator <span class="op">=</span> SVGMplPathIterator(<span class="bu">open</span>(fn, <span class="st">"rb"</span>).read())</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>svg_mpl_path_iterator.draw(ax)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="index_files/figure-html/cell-3-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>You can offset and scale it.</p>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First let's check the viewbox of the svg.</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>svg_mpl_path_iterator.viewbox <span class="co"># This is the size defined in the svg file.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>[0.0, 0.0, 375.0, 375.0]</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(num<span class="op">=</span><span class="dv">2</span>, clear<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>ax.set_aspect(<span class="dv">1</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>ax.plot([<span class="dv">0</span>, <span class="dv">1000</span>], [<span class="dv">0</span>, <span class="dv">1000</span>])</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>fn <span class="op">=</span> <span class="st">"homer-simpson.svg"</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>svg_mpl_path_iterator <span class="op">=</span> SVGMplPathIterator(<span class="bu">open</span>(fn, <span class="st">"rb"</span>).read())</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>svg_mpl_path_iterator.draw(ax, xy<span class="op">=</span>(<span class="dv">600</span>, <span class="dv">100</span>), scale<span class="op">=</span><span class="fl">0.7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="index_files/figure-html/cell-5-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>The package mpl-simple-svg-parser processes the input svg content using cairosvg to produce simplified svg. There are some caveats of drawing the result with matplotlib. For example, linewidth in Matplotlib cannot be specified in the data coordinate. In the example below, the arms and legs of the robot is too thin because of this issue.</p>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(num<span class="op">=</span><span class="dv">3</span>, clear<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ax.set_aspect(<span class="dv">1</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>fn <span class="op">=</span> <span class="st">"android.svg"</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>svg_mpl_path_iterator <span class="op">=</span> SVGMplPathIterator(<span class="bu">open</span>(fn, <span class="st">"rb"</span>).read())</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>svg_mpl_path_iterator.draw(ax)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="index_files/figure-html/cell-6-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Besides the stroke width issue, the package does not handle clipping.</p>
+<p>Turning on the option “pico=True” can solve some of the issues. With this option, the svg is further processed by picosvg which converts strokes to fills and clips the paths. Running pico has its own caveats though. You may check this (page)[https://leejjoon.github.io/mpl-simple-svg-parser/gallery/] and check the results.</p>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(num<span class="op">=</span><span class="dv">4</span>, clear<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>ax.set_aspect(<span class="dv">1</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>fn <span class="op">=</span> <span class="st">"android.svg"</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>svg_mpl_path_iterator <span class="op">=</span> SVGMplPathIterator(<span class="bu">open</span>(fn, <span class="st">"rb"</span>).read(), pico<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>svg_mpl_path_iterator.draw(ax)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="index_files/figure-html/cell-7-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>The package does support gradient. While the result is reasonable, the implementation is quite naive and not efficient. It uses Skia (or Cairo) to produce gradient image, and let the matplotlib’s backends to clip it.</p>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(num<span class="op">=</span><span class="dv">5</span>, clear<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ax.set_aspect(<span class="dv">1</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>fn <span class="op">=</span> <span class="st">"python.svg"</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>svg_mpl_path_iterator <span class="op">=</span> SVGMplPathIterator(<span class="bu">open</span>(fn, <span class="st">"rb"</span>).read())</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>svg_mpl_path_iterator.draw(ax)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="index_files/figure-html/cell-8-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Sometimes, the viewbox size in the svg can be incorrect. You can set datalim_mode=‘path’ to ignore the viewbox, and try to let matplotlib guess its extent based on extent of individual patches (this can be incorrect sometime.)</p>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(num<span class="op">=</span><span class="dv">6</span>, clear<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>ax.set_aspect(<span class="dv">1</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>fn <span class="op">=</span> <span class="st">"tiger.svg"</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>svg_mpl_path_iterator <span class="op">=</span> SVGMplPathIterator(<span class="bu">open</span>(fn, <span class="st">"rb"</span>).read(), pico<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>svg_mpl_path_iterator.draw(ax, datalim_mode<span class="op">=</span><span class="st">"path"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="index_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>And we can render Matplotlib logo!</p>
+<div class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>ax.set_aspect(<span class="dv">1</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>fn <span class="op">=</span> <span class="st">"matplotlib-original-wordmark.svg"</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>svg_mpl_path_iterator <span class="op">=</span> SVGMplPathIterator(<span class="bu">open</span>(fn, <span class="st">"rb"</span>).read(), pico<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>svg_mpl_path_iterator.draw(ax, datalim_mode<span class="op">=</span><span class="st">"path"</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>ax.tick_params(labelleft<span class="op">=</span><span class="va">False</span>, labelbottom<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="index_files/figure-html/cell-10-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="drawingarea" class="level1">
+<h1>DrawingArea</h1>
+<p>For the examples so far, we draw the svg in Matplotlb’s data coordinates. Often, you want your svg rendering results, behaves like text, whose size is set in points, independent of data coordinates.</p>
+<p>Instead of drawing it direcly on the axes, it is recommented to draw it on DrawingArea – derived from <a href="https://matplotlib.org/stable/api/offsetbox_api.html">OffsetBox</a> – and use <a href="https://matplotlib.org/stable/gallery/text_labels_and_annotations/demo_annotation_box.html">AnnotationBbox</a> to place it on the axes similar to annotation.</p>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.offsetbox <span class="im">import</span> AnnotationBbox</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(num<span class="op">=</span><span class="dv">7</span>, clear<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>fn <span class="op">=</span> <span class="st">"python.svg"</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>svg_mpl_path_iterator <span class="op">=</span> SVGMplPathIterator(<span class="bu">open</span>(fn, <span class="st">"rb"</span>).read())</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>da <span class="op">=</span> svg_mpl_path_iterator.get_drawing_area(ax, wmax<span class="op">=</span><span class="dv">64</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>ab <span class="op">=</span> AnnotationBbox(da, (<span class="fl">0.5</span>, <span class="fl">0.5</span>), xycoords<span class="op">=</span><span class="st">"data"</span>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>ax.add_artist(ab)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>&lt;matplotlib.offsetbox.AnnotationBbox at 0x7b69a1b0a9e0&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="index_files/figure-html/cell-11-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="annotation-example" class="level1">
+<h1>Annotation Example</h1>
+<p>Let’s make a barplot and annotate it with svgs.</p>
+<p>We start with a boxplot</p>
+<div class="cell" data-execution_count="24">
+<div class="cell-output cell-output-display" data-execution_count="24">
+<pre><code>(0.0, 1.2)</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="index_files/figure-html/cell-12-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>We annotate the plot with svg in drawing_area.</p>
+<div class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We will use svg icons downloaded from (devicons)[https://github.com/devicons/devicon]</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> toml</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>icons <span class="op">=</span> toml.load(<span class="bu">open</span>(<span class="st">"svg_icons.toml"</span>))</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>icons[<span class="st">"Python"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="29">
+<pre><code>'&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"&gt;&lt;linearGradient id="python-original-a" gradientUnits="userSpaceOnUse" x1="70.252" y1="1237.476" x2="170.659" y2="1151.089" gradientTransform="matrix(.563 0 0 -.568 -29.215 707.817)"&gt;&lt;stop offset="0" stop-color="#5A9FD4"/&gt;&lt;stop offset="1" stop-color="#306998"/&gt;&lt;/linearGradient&gt;&lt;linearGradient id="python-original-b" gradientUnits="userSpaceOnUse" x1="209.474" y1="1098.811" x2="173.62" y2="1149.537" gradientTransform="matrix(.563 0 0 -.568 -29.215 707.817)"&gt;&lt;stop offset="0" stop-color="#FFD43B"/&gt;&lt;stop offset="1" stop-color="#FFE873"/&gt;&lt;/linearGradient&gt;&lt;path fill="url(#python-original-a)" d="M63.391 1.988c-4.222.02-8.252.379-11.8 1.007-10.45 1.846-12.346 5.71-12.346 12.837v9.411h24.693v3.137H29.977c-7.176 0-13.46 4.313-15.426 12.521-2.268 9.405-2.368 15.275 0 25.096 1.755 7.311 5.947 12.519 13.124 12.519h8.491V67.234c0-8.151 7.051-15.34 15.426-15.34h24.665c6.866 0 12.346-5.654 12.346-12.548V15.833c0-6.693-5.646-11.72-12.346-12.837-4.244-.706-8.645-1.027-12.866-1.008zM50.037 9.557c2.55 0 4.634 2.117 4.634 4.721 0 2.593-2.083 4.69-4.634 4.69-2.56 0-4.633-2.097-4.633-4.69-.001-2.604 2.073-4.721 4.633-4.721z" transform="translate(0 10.26)"/&gt;&lt;path fill="url(#python-original-b)" d="M91.682 28.38v10.966c0 8.5-7.208 15.655-15.426 15.655H51.591c-6.756 0-12.346 5.783-12.346 12.549v23.515c0 6.691 5.818 10.628 12.346 12.547 7.816 2.297 15.312 2.713 24.665 0 6.216-1.801 12.346-5.423 12.346-12.547v-9.412H63.938v-3.138h37.012c7.176 0 9.852-5.005 12.348-12.519 2.578-7.735 2.467-15.174 0-25.096-1.774-7.145-5.161-12.521-12.348-12.521h-9.268zM77.809 87.927c2.561 0 4.634 2.097 4.634 4.692 0 2.602-2.074 4.719-4.634 4.719-2.55 0-4.633-2.117-4.633-4.719 0-2.595 2.083-4.692 4.633-4.692z" transform="translate(0 10.26)"/&gt;&lt;radialGradient id="python-original-c" cx="1825.678" cy="444.45" r="26.743" gradientTransform="matrix(0 -.24 -1.055 0 532.979 557.576)" gradientUnits="userSpaceOnUse"&gt;&lt;stop offset="0" stop-color="#B8B8B8" stop-opacity=".498"/&gt;&lt;stop offset="1" stop-color="#7F7F7F" stop-opacity="0"/&gt;&lt;/radialGradient&gt;&lt;path opacity=".444" fill="url(#python-original-c)" d="M97.309 119.597c0 3.543-14.816 6.416-33.091 6.416-18.276 0-33.092-2.873-33.092-6.416 0-3.544 14.815-6.417 33.092-6.417 18.275 0 33.091 2.872 33.091 6.417z"/&gt;&lt;/svg&gt;\n'</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_da(b, ax, wmax<span class="op">=</span><span class="dv">64</span>, hmax<span class="op">=</span><span class="dv">64</span>):</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    svg_mpl_path_iterator <span class="op">=</span> SVGMplPathIterator(b)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    da <span class="op">=</span> svg_mpl_path_iterator.get_drawing_area(ax, wmax<span class="op">=</span>wmax, hmax<span class="op">=</span>hmax)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> da</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> l, bar <span class="kw">in</span> <span class="bu">zip</span>(ylabels, ax.containers[<span class="dv">0</span>]):</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    da <span class="op">=</span> get_da(icons[l].encode(<span class="st">"ascii"</span>), ax, wmax<span class="op">=</span><span class="dv">32</span>, hmax<span class="op">=</span><span class="dv">32</span>)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    ab <span class="op">=</span> AnnotationBbox(da, (<span class="fl">1.</span>, <span class="fl">0.5</span>), xycoords<span class="op">=</span>bar, frameon<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>                        xybox<span class="op">=</span>(<span class="dv">5</span>, <span class="dv">0</span>), boxcoords<span class="op">=</span><span class="st">"offset points"</span>,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>                        box_alignment<span class="op">=</span>(<span class="fl">0.0</span>, <span class="fl">0.5</span>))</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    ax.add_artist(ab)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="28">
+<div class="cell-output cell-output-display" data-execution_count="28">
+<p><img src="index_files/figure-html/cell-15-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="accessing-the-parsed-results" class="level1">
+<h1>Accessing the parsed results</h1>
+<p>Once can access the parsed results. The base methods would be ‘iter_path_attrib’ and ‘iter_mpl_path_patch_prop’.</p>
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>fn <span class="op">=</span> <span class="st">"python.svg"</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>svg_mpl_path_iterator <span class="op">=</span> SVGMplPathIterator(<span class="bu">open</span>(fn, <span class="st">"rb"</span>).read())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span>(svg_mpl_path_iterator.iter_path_attrib())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>[('M 20.25 12 C 20.25 6.75 27 2.25 38.25 2.25 C 49.5 2.25 55.5 6.75 55.5 12 L 55.5 28.5 C 55.5 33.75 51.75 37.5 47.25 37.5 L 29.25 37.5 C 23.25 37.5 18.75 42 18.75 48.75 L 18.75 56.25 L 12 56.25 C 6 56.25 2.25 49.5 2.25 38.25 C 2.25 27.75 6 21 12 21 L 38.25 21 L 38.25 18.75 L 20.25 18.75 Z M 66 37.5 L 66 38.25 ',
+  {'id': 'surface101',
+   'style': ' stroke:none;fill-rule:nonzero;fill:url(#linear0);',
+   'd': 'M 20.25 12 C 20.25 6.75 27 2.25 38.25 2.25 C 49.5 2.25 55.5 6.75 55.5 12 L 55.5 28.5 C 55.5 33.75 51.75 37.5 47.25 37.5 L 29.25 37.5 C 23.25 37.5 18.75 42 18.75 48.75 L 18.75 56.25 L 12 56.25 C 6 56.25 2.25 49.5 2.25 38.25 C 2.25 27.75 6 21 12 21 L 38.25 21 L 38.25 18.75 L 20.25 18.75 Z M 66 37.5 L 66 38.25 '}),
+ ('M 55.5 65.25 C 55.5 70.5 49.5 75 38.25 75 C 27 75 20.25 70.5 20.25 65.25 L 20.25 48.75 C 20.25 43.5 24.75 39.75 29.25 39.75 L 47.25 39.75 C 53.25 39.75 57.75 34.5 57.75 28.5 L 57.75 21 L 64.5 21 C 69.75 21 74.25 27.75 74.25 38.25 C 74.25 49.5 69.75 56.25 64.5 56.25 L 38.25 56.25 L 38.25 58.5 L 55.5 58.5 Z M 105 37.5 L 105 38.25 ',
+  {'id': 'surface101',
+   'style': ' stroke:none;fill-rule:nonzero;fill:url(#linear1);',
+   'd': 'M 55.5 65.25 C 55.5 70.5 49.5 75 38.25 75 C 27 75 20.25 70.5 20.25 65.25 L 20.25 48.75 C 20.25 43.5 24.75 39.75 29.25 39.75 L 47.25 39.75 C 53.25 39.75 57.75 34.5 57.75 28.5 L 57.75 21 L 64.5 21 C 69.75 21 74.25 27.75 74.25 38.25 C 74.25 49.5 69.75 56.25 64.5 56.25 L 38.25 56.25 L 38.25 58.5 L 55.5 58.5 Z M 105 37.5 L 105 38.25 '}),
+ ('M 51 66 C 51 70 45 70 45 66 C 45 62 51 62 51 66 Z M 51 66 ',
+  {'id': 'surface101',
+   'style': ' stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;',
+   'd': 'M 51 66 C 51 70 45 70 45 66 C 45 62 51 62 51 66 Z M 51 66 '}),
+ ('M 30.75 11.25 C 30.75 15.25 24.75 15.25 24.75 11.25 C 24.75 7.25 30.75 7.25 30.75 11.25 Z M 30.75 11.25 ',
+  {'id': 'surface101',
+   'style': ' stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;',
+   'd': 'M 30.75 11.25 C 30.75 15.25 24.75 15.25 24.75 11.25 C 24.75 7.25 30.75 7.25 30.75 11.25 Z M 30.75 11.25 '})]</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span>(svg_mpl_path_iterator.iter_mpl_path_patch_prop())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>[(Path(array([[20.25, 63.  ],
+         [20.25, 68.25],
+         [27.  , 72.75],
+         [38.25, 72.75],
+         [49.5 , 72.75],
+         [55.5 , 68.25],
+         [55.5 , 63.  ],
+         [55.5 , 46.5 ],
+         [55.5 , 41.25],
+         [51.75, 37.5 ],
+         [47.25, 37.5 ],
+         [29.25, 37.5 ],
+         [23.25, 37.5 ],
+         [18.75, 33.  ],
+         [18.75, 26.25],
+         [18.75, 18.75],
+         [12.  , 18.75],
+         [ 6.  , 18.75],
+         [ 2.25, 25.5 ],
+         [ 2.25, 36.75],
+         [ 2.25, 47.25],
+         [ 6.  , 54.  ],
+         [12.  , 54.  ],
+         [38.25, 54.  ],
+         [38.25, 56.25],
+         [20.25, 56.25],
+         [20.25, 63.  ],
+         [20.25, 63.  ],
+         [66.  , 37.5 ],
+         [66.  , 36.75]]), array([ 1,  4,  4,  4,  4,  4,  4,  2,  4,  4,  4,  2,  4,  4,  4,  2,  2,
+          4,  4,  4,  4,  4,  4,  2,  2,  2,  2, 79,  1,  2], dtype=uint8)),
+  {'fc': 'none',
+   'ec': 'none',
+   'lw': 1.0,
+   'alpha': 1,
+   'fc_orig': 'url(#linear0)'}),
+ (Path(array([[ 55.5 ,   9.75],
+         [ 55.5 ,   4.5 ],
+         [ 49.5 ,   0.  ],
+         [ 38.25,   0.  ],
+         [ 27.  ,   0.  ],
+         [ 20.25,   4.5 ],
+         [ 20.25,   9.75],
+         [ 20.25,  26.25],
+         [ 20.25,  31.5 ],
+         [ 24.75,  35.25],
+         [ 29.25,  35.25],
+         [ 47.25,  35.25],
+         [ 53.25,  35.25],
+         [ 57.75,  40.5 ],
+         [ 57.75,  46.5 ],
+         [ 57.75,  54.  ],
+         [ 64.5 ,  54.  ],
+         [ 69.75,  54.  ],
+         [ 74.25,  47.25],
+         [ 74.25,  36.75],
+         [ 74.25,  25.5 ],
+         [ 69.75,  18.75],
+         [ 64.5 ,  18.75],
+         [ 38.25,  18.75],
+         [ 38.25,  16.5 ],
+         [ 55.5 ,  16.5 ],
+         [ 55.5 ,   9.75],
+         [ 55.5 ,   9.75],
+         [105.  ,  37.5 ],
+         [105.  ,  36.75]]), array([ 1,  4,  4,  4,  4,  4,  4,  2,  4,  4,  4,  2,  4,  4,  4,  2,  2,
+          4,  4,  4,  4,  4,  4,  2,  2,  2,  2, 79,  1,  2], dtype=uint8)),
+  {'fc': 'none',
+   'ec': 'none',
+   'lw': 1.0,
+   'alpha': 1,
+   'fc_orig': 'url(#linear1)'}),
+ (Path(array([[51.,  9.],
+         [51.,  5.],
+         [45.,  5.],
+         [45.,  9.],
+         [45., 13.],
+         [51., 13.],
+         [51.,  9.],
+         [51.,  9.],
+         [51.,  9.]]), array([ 1,  4,  4,  4,  4,  4,  4, 79,  1], dtype=uint8)),
+  {'fc': array([1., 1., 1.]),
+   'ec': 'none',
+   'lw': 1.0,
+   'alpha': 1.0,
+   'fc_orig': None}),
+ (Path(array([[30.75, 63.75],
+         [30.75, 59.75],
+         [24.75, 59.75],
+         [24.75, 63.75],
+         [24.75, 67.75],
+         [30.75, 67.75],
+         [30.75, 63.75],
+         [30.75, 63.75],
+         [30.75, 63.75]]), array([ 1,  4,  4,  4,  4,  4,  4, 79,  1], dtype=uint8)),
+  {'fc': array([1., 1., 1.]),
+   'ec': 'none',
+   'lw': 1.0,
+   'alpha': 1.0,
+   'fc_orig': None})]</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
