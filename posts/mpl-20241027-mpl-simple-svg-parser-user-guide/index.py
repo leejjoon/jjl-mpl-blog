@@ -1,10 +1,9 @@
 # ---
 # title: "Rendering SVG with Matplotlib"
 # author: "Jae-Joon Lee"
-# date: "01/11/2024"
-# draft: true
-# date-modified: "01/11/2024"
-# image: https://mpl-simple-svg-parser.readthedocs.io/en/latest/_images/sphx_glr_example_annotation_box_001.png
+# date: "10/27/2024"
+# draft: false
+# date-modified: "10/27/2024"
 #
 # ---
 
@@ -16,11 +15,13 @@
 # We will use (mpl-simple-svg-parser)[https://mpl-simple-svg-parser.readthedocs.io/en/latest/index.html] package. Note that this package is not fully-featured SVG parser. Instead, it uses (cariosvg)[https://cairosvg.org/] and (picosvg)[https://github.com/googlefonts/picosvg] to convert the input svg into a more manageable svg and then read them with the help of (svgpath2mpl)[https://github.com/nvictus/svgpath2mpl]. The package does support gradient in a very ad hoc way. It uses (Skia)[https://skia.org/] to produce gradient image and include them in the matplotlib plot.
 #
 # While this is not ideal (and not very efficient), this let you render a good fraction of svg wit matlotlib. On the other hand, features like filters are not supported.
-
-# %% [markdown]
+#
 # Here is an example of annotating your plot with svg.
 
 # %%
+#| warning: false
+#| code-fold: true
+
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
@@ -40,7 +41,7 @@ l = [
     ("C#", 0.3973)
 ]
 
-df = pd.DataFrame(l, columns=["language", "score"])
+df = pd.DataFrame(l, columns=["Language", "Score"])
 
 
 sns.set_color_codes("muted")
@@ -48,7 +49,7 @@ sns.set(font_scale = 1.5)
 
 fig, ax = plt.subplots(num=1, clear=True, layout="constrained")
 
-sns.barplot(x="score", y="language", data=df,
+sns.barplot(x="Score", y="Language", data=df,
             label="Tiobe Score 2023", color="b",
             legend=False)
 
@@ -56,17 +57,28 @@ ax.yaxis.label.set_visible(False)
 ax.set_title("TIOBE Score 2023")
 ax.set_xlim(0, 1.13)
 
-from svg_icons import icons
+ylabels = [l.get_text() for l in ax.get_yticklabels()] # save it to use with svg icons later
+bars = ax.containers[0] # list of rectangles for the bars.
+
+for bar, l in zip(bars, ylabels):
+    ax.annotate(l, xy=(0, 0.5), xycoords=bar, va="center", ha="left",
+               xytext=(10, 0), textcoords="offset points", color="w")
+
+ax.tick_params(axis="y",labelleft=False)
+# ax.tick_params(axis="x",direction="in")
+
+ax.set_xlim(0, 1.2) # to make a room for svg annotattion.
+
+import toml
+icons = toml.load(open("svg_icons.toml"))
 
 def get_da(b, ax, wmax=64, hmax=64):
     svg_mpl_path_iterator = SVGMplPathIterator(b)
     da = svg_mpl_path_iterator.get_drawing_area(ax, wmax=wmax, hmax=hmax)
     return da
 
-for l, bar in zip(ax.get_yticklabels(), ax.containers[0]):
-    lang = l.get_text().lower()
-
-    da = get_da(icons[lang], ax, wmax=32, hmax=32)
+for l, bar in zip(ylabels, bars):
+    da = get_da(icons[l].encode("ascii"), ax, wmax=32, hmax=32)
     ab = AnnotationBbox(da, (1., 0.5), xycoords=bar, frameon=False,
                         xybox=(5, 0), boxcoords="offset points",
                         box_alignment=(0.0, 0.5))
@@ -77,6 +89,7 @@ plt.show()
 
 
 # %% [markdown]
+# # Using `SVGMplPathIterator` from mpl_simple_svg_parser
 #
 # Let's start with a simple example. The base class is `SVGMplPathIterator`. It reads the svg string, and produces a list of matplotlib's path object. If you want to render the svg in the axes' data coordinate, you may simply use the `draw` method.
 #
@@ -100,7 +113,6 @@ svg_mpl_path_iterator.draw(ax)
 svg_mpl_path_iterator.viewbox # This is the size defined in the svg file.
 
 # %%
-
 fig, ax = plt.subplots(num=2, clear=True)
 ax.set_aspect(1)
 ax.plot([0, 1000], [0, 1000])
@@ -114,7 +126,6 @@ svg_mpl_path_iterator.draw(ax, xy=(600, 100), scale=0.7)
 # the arms and legs of the robot is too thin because of this issue.
 
 # %%
-
 fig, ax = plt.subplots(num=3, clear=True)
 ax.set_aspect(1)
 fn = "android.svg"
@@ -136,11 +147,10 @@ svg_mpl_path_iterator.draw(ax)
 
 
 # %% [markdown]
-# The package does support gradient. While the result is reasonable, the implementation is quite naive. It uses Skia (or Cairo) to produce gradient image, and let the
+# The package does support gradient. While the result is reasonable, the implementation is quite naive and not efficient. It uses Skia (or Cairo) to produce gradient image, and let the
 # matplotlib's backends to clip it.
 
 # %%
-
 fig, ax = plt.subplots(num=5, clear=True)
 ax.set_aspect(1)
 fn = "python.svg"
@@ -158,6 +168,19 @@ ax.set_aspect(1)
 fn = "tiger.svg"
 svg_mpl_path_iterator = SVGMplPathIterator(open(fn, "rb").read(), pico=True)
 svg_mpl_path_iterator.draw(ax, datalim_mode="path")
+
+# %% [markdown]
+# And we can render Matplotlib logo!
+
+# %%
+fig, ax = plt.subplots()
+ax.set_aspect(1)
+fn = "matplotlib-original-wordmark.svg"
+svg_mpl_path_iterator = SVGMplPathIterator(open(fn, "rb").read(), pico=True)
+svg_mpl_path_iterator.draw(ax, datalim_mode="path")
+
+ax.tick_params(labelleft=False, labelbottom=False)
+
 
 # %% [markdown]
 # # DrawingArea
@@ -179,11 +202,15 @@ ab = AnnotationBbox(da, (0.5, 0.5), xycoords="data")
 ax.add_artist(ab)
 
 # %% [markdown]
+# # Annotation Example
+#
 # Let's make a barplot and annotate it with svgs.
 #
 # We start with a boxplot
 
 # %%
+#| echo: false
+#| warning: false
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
@@ -191,9 +218,7 @@ import pandas as pd
 from matplotlib.offsetbox import AnnotationBbox
 from mpl_simple_svg_parser import SVGMplPathIterator
 
-
 # TIOBE score from https://spectrum.ieee.org/the-top-programming-languages-2023
-
 l = [
     ("Python", 1),
     ("Java", 0.588),
@@ -203,53 +228,62 @@ l = [
     ("C#", 0.3973)
 ]
 
-df = pd.DataFrame(l, columns=["language", "score"])
-
+df = pd.DataFrame(l, columns=["Language", "Score"])
 
 sns.set_color_codes("muted")
 sns.set(font_scale = 1.5)
 
 fig, ax = plt.subplots(num=1, clear=True, layout="constrained")
 
-sns.barplot(x="score", y="language", data=df,
+sns.barplot(x="Score", y="Language", data=df,
             label="Tiobe Score 2023", color="b",
             legend=False)
 
 ax.yaxis.label.set_visible(False)
 ax.set_title("TIOBE Score 2023")
 
-ax.set_xlim(0, 1.13) # to make a room for svg annotattion.
+ylabels = [l.get_text() for l in ax.get_yticklabels()] # save it to use with svg icons later
+bars = ax.containers[0] # list of rectangles for the bars.
+
+for bar, l in zip(bars, ylabels):
+    ax.annotate(l, xy=(0, 0.5), xycoords=bar, va="center", ha="left",
+               xytext=(10, 0), textcoords="offset points", color="w")
+
+ax.tick_params(axis="y",labelleft=False)
+# ax.tick_params(axis="x",direction="in")
+
+ax.set_xlim(0, 1.2) # to make a room for svg annotattion.
 
 # %% [markdown]
 #
 # We annotate the plot with svg in drawing_area.
 
 # %%
+# We will use svg icons downloaded from (devicons)[https://github.com/devicons/devicon]
 
-from svg_icons import icons
+import toml
+icons = toml.load(open("svg_icons.toml"))
+icons["Python"]
 
+
+# %%
 def get_da(b, ax, wmax=64, hmax=64):
     svg_mpl_path_iterator = SVGMplPathIterator(b)
     da = svg_mpl_path_iterator.get_drawing_area(ax, wmax=wmax, hmax=hmax)
     return da
 
-for l, bar in zip(ax.get_yticklabels(), ax.containers[0]):
-    lang = l.get_text().lower()
+for l, bar in zip(ylabels, ax.containers[0]):
 
-    da = get_da(icons[lang], ax, wmax=32, hmax=32)
+    da = get_da(icons[l].encode("ascii"), ax, wmax=32, hmax=32)
     ab = AnnotationBbox(da, (1., 0.5), xycoords=bar, frameon=False,
                         xybox=(5, 0), boxcoords="offset points",
                         box_alignment=(0.0, 0.5))
     ax.add_artist(ab)
 
-# %% [markdown]
-# The example below demonstrate how you can use AnnotationBbox to add svg in your plot.
-#
-# https://mpl-simple-svg-parser.readthedocs.io/en/latest/examples/example_annotation_box.html#sphx-glr-examples-example-annotation-box-py
-#
-#
-# ![svg with annotation](https://mpl-simple-svg-parser.readthedocs.io/en/latest/_images/sphx_glr_example_annotation_box_001.png)
-#
+# %%
+#| echo: false
+#| warning: false
+fig
 
 # %% [markdown]
 # # Accessing the parsed results
@@ -266,5 +300,3 @@ list(svg_mpl_path_iterator.iter_path_attrib())
 
 # %%
 list(svg_mpl_path_iterator.iter_mpl_path_patch_prop())
-
-# %%
