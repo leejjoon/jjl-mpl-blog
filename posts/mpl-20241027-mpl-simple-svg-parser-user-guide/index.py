@@ -3,7 +3,7 @@
 # author: "Jae-Joon Lee"
 # date: "10/27/2024"
 # draft: false
-# date-modified: "10/27/2024"
+# date-modified: "10/29/2024"
 #
 # ---
 
@@ -209,8 +209,7 @@ ax.add_artist(ab)
 # We start with a boxplot
 
 # %%
-#| echo: false
-#| warning: false
+#| output: false
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
@@ -253,6 +252,11 @@ ax.tick_params(axis="y",labelleft=False)
 # ax.tick_params(axis="x",direction="in")
 
 ax.set_xlim(0, 1.2) # to make a room for svg annotattion.
+
+# %%
+#| echo: false
+#| warning: false
+fig
 
 # %% [markdown]
 #
@@ -300,3 +304,5 @@ list(svg_mpl_path_iterator.iter_path_attrib())
 
 # %%
 list(svg_mpl_path_iterator.iter_mpl_path_patch_prop())
+
+# %%
