@@ -2,54 +2,58 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://leejjoon.github.io/jjl-mpl-blog/about.html</loc>
-    <lastmod>2024-11-08T07:29:26.024Z</lastmod>
+    <lastmod>2025-02-16T14:55:25.763Z</lastmod>
   </url>
   <url>
     <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20240408-fancy-bar-plot/index.html</loc>
-    <lastmod>2024-11-08T07:29:25.337Z</lastmod>
+    <lastmod>2025-02-16T14:55:25.373Z</lastmod>
   </url>
   <url>
     <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20241107-car-crash-plot-with-fancy-bar/index.html</loc>
-    <lastmod>2024-11-08T07:29:24.397Z</lastmod>
+    <lastmod>2025-02-16T14:55:24.817Z</lastmod>
   </url>
   <url>
-    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20240325-alphabet-frequency-chart/index.html</loc>
-    <lastmod>2024-11-08T07:29:23.540Z</lastmod>
-  </url>
-  <url>
-    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20240324-upgrade-violin-plots/index.html</loc>
-    <lastmod>2024-11-08T07:29:22.374Z</lastmod>
-  </url>
-  <url>
-    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20231130-intro_speech_bubble/index.html</loc>
-    <lastmod>2024-11-08T07:29:21.024Z</lastmod>
-  </url>
-  <url>
-    <loc>https://leejjoon.github.io/jjl-mpl-blog/index.html</loc>
-    <lastmod>2024-11-08T07:29:20.176Z</lastmod>
-  </url>
-  <url>
-    <loc>https://leejjoon.github.io/jjl-mpl-blog/README_admin.html</loc>
-    <lastmod>2024-11-08T07:29:20.571Z</lastmod>
-  </url>
-  <url>
-    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20241027-mpl-simple-svg-parser-user-guide/index.html</loc>
-    <lastmod>2024-11-08T07:29:21.588Z</lastmod>
+    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20250216_matplotlib_logo_cybepunk_style/index.html</loc>
+    <lastmod>2025-02-16T14:55:24.277Z</lastmod>
   </url>
   <url>
     <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20231227-christmas_with_pattern_monster/index.html</loc>
-    <lastmod>2024-11-08T07:29:22.793Z</lastmod>
+    <lastmod>2025-02-16T14:55:23.627Z</lastmod>
+  </url>
+  <url>
+    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20241027-mpl-simple-svg-parser-user-guide/index.html</loc>
+    <lastmod>2025-02-16T14:55:22.971Z</lastmod>
+  </url>
+  <url>
+    <loc>https://leejjoon.github.io/jjl-mpl-blog/README_admin.html</loc>
+    <lastmod>2025-02-16T14:55:22.432Z</lastmod>
+  </url>
+  <url>
+    <loc>https://leejjoon.github.io/jjl-mpl-blog/index.html</loc>
+    <lastmod>2025-02-16T14:55:22.272Z</lastmod>
+  </url>
+  <url>
+    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20231130-intro_speech_bubble/index.html</loc>
+    <lastmod>2025-02-16T14:55:22.663Z</lastmod>
+  </url>
+  <url>
+    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20240324-upgrade-violin-plots/index.html</loc>
+    <lastmod>2025-02-16T14:55:23.387Z</lastmod>
+  </url>
+  <url>
+    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20240325-alphabet-frequency-chart/index.html</loc>
+    <lastmod>2025-02-16T14:55:24.058Z</lastmod>
   </url>
   <url>
     <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20240224-multiple-legends/index.html</loc>
-    <lastmod>2024-11-08T07:29:23.904Z</lastmod>
+    <lastmod>2025-02-16T14:55:24.505Z</lastmod>
   </url>
   <url>
     <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20240318-mpl-flags/index.html</loc>
-    <lastmod>2024-11-08T07:29:24.908Z</lastmod>
+    <lastmod>2025-02-16T14:55:25.117Z</lastmod>
   </url>
   <url>
     <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20241028-matplotlib-renders-color-emoji/index.html</loc>
-    <lastmod>2024-11-08T07:29:25.727Z</lastmod>
+    <lastmod>2025-02-16T14:55:25.597Z</lastmod>
   </url>
 </urlset>
