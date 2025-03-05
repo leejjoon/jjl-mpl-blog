@@ -2,58 +2,62 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://leejjoon.github.io/jjl-mpl-blog/about.html</loc>
-    <lastmod>2025-02-16T14:55:25.763Z</lastmod>
+    <lastmod>2025-03-05T09:00:15.469Z</lastmod>
   </url>
   <url>
     <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20240408-fancy-bar-plot/index.html</loc>
-    <lastmod>2025-02-16T14:55:25.373Z</lastmod>
+    <lastmod>2025-03-05T09:00:15.008Z</lastmod>
   </url>
   <url>
     <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20241107-car-crash-plot-with-fancy-bar/index.html</loc>
-    <lastmod>2025-02-16T14:55:24.817Z</lastmod>
-  </url>
-  <url>
-    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20250216_matplotlib_logo_cybepunk_style/index.html</loc>
-    <lastmod>2025-02-16T14:55:24.277Z</lastmod>
-  </url>
-  <url>
-    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20231227-christmas_with_pattern_monster/index.html</loc>
-    <lastmod>2025-02-16T14:55:23.627Z</lastmod>
-  </url>
-  <url>
-    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20241027-mpl-simple-svg-parser-user-guide/index.html</loc>
-    <lastmod>2025-02-16T14:55:22.971Z</lastmod>
-  </url>
-  <url>
-    <loc>https://leejjoon.github.io/jjl-mpl-blog/README_admin.html</loc>
-    <lastmod>2025-02-16T14:55:22.432Z</lastmod>
-  </url>
-  <url>
-    <loc>https://leejjoon.github.io/jjl-mpl-blog/index.html</loc>
-    <lastmod>2025-02-16T14:55:22.272Z</lastmod>
-  </url>
-  <url>
-    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20231130-intro_speech_bubble/index.html</loc>
-    <lastmod>2025-02-16T14:55:22.663Z</lastmod>
-  </url>
-  <url>
-    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20240324-upgrade-violin-plots/index.html</loc>
-    <lastmod>2025-02-16T14:55:23.387Z</lastmod>
-  </url>
-  <url>
-    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20240325-alphabet-frequency-chart/index.html</loc>
-    <lastmod>2025-02-16T14:55:24.058Z</lastmod>
+    <lastmod>2025-03-05T09:00:14.390Z</lastmod>
   </url>
   <url>
     <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20240224-multiple-legends/index.html</loc>
-    <lastmod>2025-02-16T14:55:24.505Z</lastmod>
+    <lastmod>2025-03-05T09:00:13.866Z</lastmod>
+  </url>
+  <url>
+    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20240325-alphabet-frequency-chart/index.html</loc>
+    <lastmod>2025-03-05T09:00:13.363Z</lastmod>
+  </url>
+  <url>
+    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20240324-upgrade-violin-plots/index.html</loc>
+    <lastmod>2025-03-05T09:00:12.654Z</lastmod>
+  </url>
+  <url>
+    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20231130-intro_speech_bubble/index.html</loc>
+    <lastmod>2025-03-05T09:00:11.835Z</lastmod>
+  </url>
+  <url>
+    <loc>https://leejjoon.github.io/jjl-mpl-blog/index.html</loc>
+    <lastmod>2025-03-05T09:00:11.427Z</lastmod>
+  </url>
+  <url>
+    <loc>https://leejjoon.github.io/jjl-mpl-blog/README_admin.html</loc>
+    <lastmod>2025-03-05T09:00:11.602Z</lastmod>
+  </url>
+  <url>
+    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20241027-mpl-simple-svg-parser-user-guide/index.html</loc>
+    <lastmod>2025-03-05T09:00:12.195Z</lastmod>
+  </url>
+  <url>
+    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20231227-christmas_with_pattern_monster/index.html</loc>
+    <lastmod>2025-03-05T09:00:12.915Z</lastmod>
+  </url>
+  <url>
+    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20250216_matplotlib_logo_cybepunk_style/index.html</loc>
+    <lastmod>2025-03-05T09:00:13.610Z</lastmod>
+  </url>
+  <url>
+    <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20250305_waffle_plot/index.html</loc>
+    <lastmod>2025-03-05T09:00:14.081Z</lastmod>
   </url>
   <url>
     <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20240318-mpl-flags/index.html</loc>
-    <lastmod>2025-02-16T14:55:25.117Z</lastmod>
+    <lastmod>2025-03-05T09:00:14.732Z</lastmod>
   </url>
   <url>
     <loc>https://leejjoon.github.io/jjl-mpl-blog/posts/mpl-20241028-matplotlib-renders-color-emoji/index.html</loc>
-    <lastmod>2025-02-16T14:55:25.597Z</lastmod>
+    <lastmod>2025-03-05T09:00:15.280Z</lastmod>
   </url>
 </urlset>
