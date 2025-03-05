@@ -8,6 +8,10 @@ website:
       - about.qmd
       - icon: github
         href: https://github.com/leejjoon/jjl-mpl-blog
+  
+resources:
+  - "images/*"
+
 format:
   html:
     theme: cosmo
